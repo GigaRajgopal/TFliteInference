@@ -1,0 +1,73 @@
+import cv2
+import numpy as np
+import tensorflow as tf
+from object_detection.utils import label_map_util
+from object_detection.utils import visualization_utils as viz_utils
+
+# Load the TFLite model and label map
+# converter = tf.lite.TFLiteConverter.from_saved_model('/home/rajagopal/datasets/person_det/Tensorflow/workspace/training_demo/tflitexp/saved_model')
+# tflite_model = converter.convert()
+tflite_model = 'tflite_files/mob_ssd_v2.tflite'
+
+
+path2label_map = 'label_map.pbtxt'
+category_index = label_map_util.create_category_index_from_labelmap(path2label_map, use_display_name=True)
+
+# Loading the TFLite model
+tflite_interpreter = tf.lite.Interpreter(model_path=tflite_model)
+tflite_interpreter.allocate_tensors()
+tflite_input_details = tflite_interpreter.get_input_details()[0]
+tflite_scores = tflite_interpreter.get_output_details()[0]
+tflite_classes = tflite_interpreter.get_output_details()[3]
+tflite_detections = tflite_interpreter.get_output_details()[2]
+tflite_boxes = tflite_interpreter.get_output_details()[1]
+
+# Initialize the webcam
+cap = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+    # print(frame.shape)
+    frame = cv2.resize(frame, (320, 320))
+    show_frame = frame
+
+    frame = (frame - 127.5) / 127.5
+    frame = np.expand_dims(frame, axis=0)
+    
+    frame = frame.astype(np.float32)
+
+    tflite_interpreter.set_tensor(tflite_input_details['index'], frame)
+    tflite_interpreter.invoke()
+
+    tflite_detection_scores = tflite_interpreter.get_tensor(tflite_scores["index"])
+    tflite_detection_classes = tflite_interpreter.get_tensor(tflite_classes["index"])
+    tflite_num_detections = tflite_interpreter.get_tensor(tflite_detections["index"])
+    tflite_detection_boxes = tflite_interpreter.get_tensor(tflite_boxes["index"])
+
+    tflite_detection_scores = tflite_detection_scores[0]
+    tflite_detection_classes = tflite_detection_classes[0].astype(np.int64)
+    tflite_num_detections = tflite_num_detections[0].astype(np.int64)
+    tflite_detection_boxes = tflite_detection_boxes[0]
+    viz_utils.visualize_boxes_and_labels_on_image_array(
+        show_frame,
+        tflite_detection_boxes,
+        tflite_detection_classes + 1,
+        tflite_detection_scores,
+        category_index,
+        use_normalized_coordinates=True,
+        max_boxes_to_draw=200,
+        min_score_thresh=0.5,
+        agnostic_mode=False,
+        line_thickness=5
+    )
+    show_frame = cv2.resize(show_frame, (960,640))
+    cv2.imshow('Object Detection', show_frame)
+
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
