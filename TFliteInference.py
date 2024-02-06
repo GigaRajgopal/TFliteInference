@@ -19,7 +19,7 @@ os.makedirs(output_directory, exist_ok=True)
 
 tflite_model = '/home/rajagopal/datasets/person_det/Tensorflow/workspace/training_demo/mob_ssd_v2.tflite'
 
-path2label_map = '/home/rajagopal/datasets/person_det/Tensorflow/workspace/training_demo/annotations/label_map.pbtxt'
+path2label_map = '/label_map.pbtxt'
 category_index = label_map_util.create_category_index_from_labelmap(path2label_map, use_display_name=True)
 
 def load_image_into_numpy_array(path):
