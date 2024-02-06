@@ -5,8 +5,6 @@ from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as viz_utils
 
 # Load the TFLite model and label map
-# converter = tf.lite.TFLiteConverter.from_saved_model('/home/rajagopal/datasets/person_det/Tensorflow/workspace/training_demo/tflitexp/saved_model')
-# tflite_model = converter.convert()
 tflite_model = 'tflite_files/mob_ssd_v2.tflite'
 
 
