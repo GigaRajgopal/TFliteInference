@@ -17,7 +17,7 @@ image_paths = [os.path.join(image_directory, f) for f in os.listdir(image_direct
 output_directory = '/inference_output/'
 os.makedirs(output_directory, exist_ok=True)
 
-tflite_model = 'tflitemodel/mob_ssd_v2.tflite'
+tflite_model = 'tflite_files/mob_ssd_v2.tflite'
 
 path2label_map = 'label_map.pbtxt'
 category_index = label_map_util.create_category_index_from_labelmap(path2label_map, use_display_name=True)
