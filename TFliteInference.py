@@ -11,13 +11,13 @@ from object_detection.utils import config_util
 from object_detection.utils import visualization_utils as viz_utils
 from object_detection.builders import model_builder
 
-image_directory = '/home/rajagopal/datasets/crowd_human/crowdhuman/images/random10'
+image_directory = 'path/to/image/directory'
 image_paths = [os.path.join(image_directory, f) for f in os.listdir(image_directory) if f.endswith(('.jpg', '.jpeg', '.png'))]
 
-output_directory = '/home/rajagopal/datasets/crowd_human/crowdhuman/images/model_output11/'
+output_directory = '/inference_output/'
 os.makedirs(output_directory, exist_ok=True)
 
-tflite_model = '/home/rajagopal/datasets/person_det/Tensorflow/workspace/training_demo/mob_ssd_v2.tflite'
+tflite_model = 'tflitemodel/mob_ssd_v2.tflite'
 
 path2label_map = 'label_map.pbtxt'
 category_index = label_map_util.create_category_index_from_labelmap(path2label_map, use_display_name=True)
