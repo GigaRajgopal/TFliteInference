@@ -11,7 +11,7 @@ from object_detection.utils import config_util
 from object_detection.utils import visualization_utils as viz_utils
 from object_detection.builders import model_builder
 
-image_directory = 'path/to/image/directory'
+image_directory = 'path/to/image/directory'    #change this directory to image directory.
 image_paths = [os.path.join(image_directory, f) for f in os.listdir(image_directory) if f.endswith(('.jpg', '.jpeg', '.png'))]
 
 output_directory = '/inference_output/'
